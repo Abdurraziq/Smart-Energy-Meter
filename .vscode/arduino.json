@@ -1,0 +1,6 @@
+{
+    "sketch": "blynk_ver0.0.1.ino",
+    "board": "arduino:avr:uno",
+    "port": "COM4",
+    "output": "build"
+}
