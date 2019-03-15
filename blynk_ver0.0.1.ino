@@ -1,6 +1,7 @@
 #include <ESP8266_Lib.h>
 #include <BlynkSimpleShieldEsp8266.h>
 #include <ACS712.h>
+#include <ZMPT101B.h>
 
 // Auth Token Blynk App.
 char auth[] = "db18cc4e824c4424965f6ad5bf01c702";
@@ -24,7 +25,8 @@ float Energy;
 #define ESP8266_BAUD 115200
 
 ESP8266 wifi(&EspSerial);
-ACS712 sensor(ACS712_05B, A0);
+ZMPT101B voltageSensor(A0);
+ACS712 currentSensor(ACS712_05B, A1);
 
 void setup()
 {
@@ -32,7 +34,11 @@ void setup()
 	pinMode(12, OUTPUT);
 
 	digitalWrite(12, LOW);
-	sensor.calibrate();
+
+	delay(1000);
+
+	voltageSensor.calibrate();
+	currentSensor.calibrate();
 
 	EspSerial.begin(ESP8266_BAUD);
 	delay(10);
@@ -50,15 +56,16 @@ void loop()
 
 void calculate()
 {
-	Voltage = 230;
+	Voltage = voltageSensor.getVoltageAC();
+	Voltage = round(Voltage * 10) / 10.0;
 
-	Current = sensor.getCurrentAC();
+	Current = currentSensor.getCurrentAC();
 	Current = round(Current * 10) / 10.0;
 
 	Power = Voltage * Current;
 	Power = round(Power * 10) / 10.0;
 
-	Energy += Power;
+	Energy += (Power/3600000);
 
 	check();
 }
