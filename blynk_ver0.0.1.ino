@@ -4,7 +4,7 @@
 #include <ZMPT101B.h>
 
 // Auth Token Blynk App.
-char auth[] = "db18cc4e824c4424965f6ad5bf01c702";
+char auth[] = "youtAuthToke";
 
 // WiFi credentials.
 char ssid[] = "S50D";
